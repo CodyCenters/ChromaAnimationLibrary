@@ -1,0 +1,426 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" mc:Ignorable="d" x:Name="EditorWindow" x:Class="AnimationEditor.MainWindow"
+        Title="Chroma Animation Editor" d:DesignWidth="829" Closing="OnClose">
+    <Window.Resources>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <LinearGradientBrush x:Key="ComboBox.Static.Background" EndPoint="0,1" StartPoint="0,0">
+            <GradientStop Color="#FFF0F0F0" Offset="0.0"/>
+            <GradientStop Color="#FFE5E5E5" Offset="1.0"/>
+        </LinearGradientBrush>
+        <SolidColorBrush x:Key="ComboBox.Static.Border" Color="#FFACACAC"/>
+        <SolidColorBrush x:Key="ComboBox.Static.Editable.Background" Color="#FFFFFFFF"/>
+        <SolidColorBrush x:Key="ComboBox.Static.Editable.Border" Color="#FFABADB3"/>
+        <SolidColorBrush x:Key="ComboBox.Static.Editable.Button.Background" Color="Transparent"/>
+        <SolidColorBrush x:Key="ComboBox.Static.Editable.Button.Border" Color="Transparent"/>
+        <SolidColorBrush x:Key="ComboBox.MouseOver.Glyph" Color="#FF000000"/>
+        <LinearGradientBrush x:Key="ComboBox.MouseOver.Background" EndPoint="0,1" StartPoint="0,0">
+            <GradientStop Color="#FFECF4FC" Offset="0.0"/>
+            <GradientStop Color="#FFDCECFC" Offset="1.0"/>
+        </LinearGradientBrush>
+        <SolidColorBrush x:Key="ComboBox.MouseOver.Border" Color="#FF7EB4EA"/>
+        <SolidColorBrush x:Key="ComboBox.MouseOver.Editable.Background" Color="#FFFFFFFF"/>
+        <SolidColorBrush x:Key="ComboBox.MouseOver.Editable.Border" Color="#FF7EB4EA"/>
+        <LinearGradientBrush x:Key="ComboBox.MouseOver.Editable.Button.Background" EndPoint="0,1" StartPoint="0,0">
+            <GradientStop Color="#FFEBF4FC" Offset="0.0"/>
+            <GradientStop Color="#FFDCECFC" Offset="1.0"/>
+        </LinearGradientBrush>
+        <SolidColorBrush x:Key="ComboBox.MouseOver.Editable.Button.Border" Color="#FF7EB4EA"/>
+        <SolidColorBrush x:Key="ComboBox.Pressed.Glyph" Color="#FF000000"/>
+        <LinearGradientBrush x:Key="ComboBox.Pressed.Background" EndPoint="0,1" StartPoint="0,0">
+            <GradientStop Color="#FFDAECFC" Offset="0.0"/>
+            <GradientStop Color="#FFC4E0FC" Offset="1.0"/>
+        </LinearGradientBrush>
+        <SolidColorBrush x:Key="ComboBox.Pressed.Border" Color="#FF569DE5"/>
+        <SolidColorBrush x:Key="ComboBox.Pressed.Editable.Background" Color="#FFFFFFFF"/>
+        <SolidColorBrush x:Key="ComboBox.Pressed.Editable.Border" Color="#FF569DE5"/>
+        <LinearGradientBrush x:Key="ComboBox.Pressed.Editable.Button.Background" EndPoint="0,1" StartPoint="0,0">
+            <GradientStop Color="#FFDAEBFC" Offset="0.0"/>
+            <GradientStop Color="#FFC4E0FC" Offset="1.0"/>
+        </LinearGradientBrush>
+        <SolidColorBrush x:Key="ComboBox.Pressed.Editable.Button.Border" Color="#FF569DE5"/>
+        <SolidColorBrush x:Key="ComboBox.Disabled.Glyph" Color="#FFBFBFBF"/>
+        <SolidColorBrush x:Key="ComboBox.Disabled.Background" Color="#FFF0F0F0"/>
+        <SolidColorBrush x:Key="ComboBox.Disabled.Border" Color="#FFD9D9D9"/>
+        <SolidColorBrush x:Key="ComboBox.Disabled.Editable.Background" Color="#FFFFFFFF"/>
+        <SolidColorBrush x:Key="ComboBox.Disabled.Editable.Border" Color="#FFBFBFBF"/>
+        <SolidColorBrush x:Key="ComboBox.Disabled.Editable.Button.Background" Color="Transparent"/>
+        <SolidColorBrush x:Key="ComboBox.Disabled.Editable.Button.Border" Color="Transparent"/>
+        <SolidColorBrush x:Key="ComboBox.Static.Glyph" Color="#FF606060"/>
+        <Style x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="ClickMode" Value="Press"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border x:Name="templateRoot" BorderBrush="{StaticResource ComboBox.Static.Border}" BorderThickness="{TemplateBinding BorderThickness}" Background="{StaticResource ComboBox.Static.Background}" SnapsToDevicePixels="true">
+                            <Border x:Name="splitBorder" BorderBrush="Transparent" BorderThickness="1" HorizontalAlignment="Right" Margin="0" SnapsToDevicePixels="true" Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}">
+                                <Path x:Name="arrow" Data="F1 M 0,0 L 2.667,2.66665 L 5.3334,0 L 5.3334,-1.78168 L 2.6667,0.88501 L0,-1.78168 L0,0 Z" Fill="{StaticResource ComboBox.Static.Glyph}" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center"/>
+                            </Border>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="true"/>
+                                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="false"/>
+                                    <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="false"/>
+                                    <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" TargetName="templateRoot" Value="{StaticResource ComboBox.Static.Editable.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource ComboBox.Static.Editable.Border}"/>
+                                <Setter Property="Background" TargetName="splitBorder" Value="{StaticResource ComboBox.Static.Editable.Button.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="splitBorder" Value="{StaticResource ComboBox.Static.Editable.Button.Border}"/>
+                            </MultiDataTrigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Fill" TargetName="arrow" Value="{StaticResource ComboBox.MouseOver.Glyph}"/>
+                            </Trigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                    <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="false"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" TargetName="templateRoot" Value="{StaticResource ComboBox.MouseOver.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource ComboBox.MouseOver.Border}"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                    <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="true"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" TargetName="templateRoot" Value="{StaticResource ComboBox.MouseOver.Editable.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource ComboBox.MouseOver.Editable.Border}"/>
+                                <Setter Property="Background" TargetName="splitBorder" Value="{StaticResource ComboBox.MouseOver.Editable.Button.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="splitBorder" Value="{StaticResource ComboBox.MouseOver.Editable.Button.Border}"/>
+                            </MultiDataTrigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Fill" TargetName="arrow" Value="{StaticResource ComboBox.Pressed.Glyph}"/>
+                            </Trigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                    <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="false"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" TargetName="templateRoot" Value="{StaticResource ComboBox.Pressed.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource ComboBox.Pressed.Border}"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                    <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="true"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" TargetName="templateRoot" Value="{StaticResource ComboBox.Pressed.Editable.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource ComboBox.Pressed.Editable.Border}"/>
+                                <Setter Property="Background" TargetName="splitBorder" Value="{StaticResource ComboBox.Pressed.Editable.Button.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="splitBorder" Value="{StaticResource ComboBox.Pressed.Editable.Button.Border}"/>
+                            </MultiDataTrigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Fill" TargetName="arrow" Value="{StaticResource ComboBox.Disabled.Glyph}"/>
+                            </Trigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false"/>
+                                    <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="false"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" TargetName="templateRoot" Value="{StaticResource ComboBox.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource ComboBox.Disabled.Border}"/>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="false"/>
+                                    <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="true"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Background" TargetName="templateRoot" Value="{StaticResource ComboBox.Disabled.Editable.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource ComboBox.Disabled.Editable.Border}"/>
+                                <Setter Property="Background" TargetName="splitBorder" Value="{StaticResource ComboBox.Disabled.Editable.Button.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="splitBorder" Value="{StaticResource ComboBox.Disabled.Editable.Button.Border}"/>
+                            </MultiDataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <ControlTemplate x:Key="ComboBoxTemplate" TargetType="{x:Type ComboBox}">
+            <Grid x:Name="templateRoot" SnapsToDevicePixels="true">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" Width="0"/>
+                </Grid.ColumnDefinitions>
+                <Popup x:Name="PART_Popup" AllowsTransparency="true" Grid.ColumnSpan="2" IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Margin="1" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}" Placement="Bottom">
+                    <Themes:SystemDropShadowChrome x:Name="shadow" Color="Transparent" MaxHeight="{TemplateBinding MaxDropDownHeight}" MinWidth="{Binding ActualWidth, ElementName=templateRoot}">
+                        <Border x:Name="dropDownBorder" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" BorderThickness="1" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+                            <ScrollViewer x:Name="DropDownScrollViewer">
+                                <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
+                                    <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
+                                        <Rectangle x:Name="opaqueRect" Fill="{Binding Background, ElementName=dropDownBorder}" Height="{Binding ActualHeight, ElementName=dropDownBorder}" Width="{Binding ActualWidth, ElementName=dropDownBorder}"/>
+                                    </Canvas>
+                                    <ItemsPresenter x:Name="ItemsPresenter" KeyboardNavigation.DirectionalNavigation="Contained" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                </Grid>
+                            </ScrollViewer>
+                        </Border>
+                    </Themes:SystemDropShadowChrome>
+                </Popup>
+                <ToggleButton x:Name="toggleButton" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.ColumnSpan="2" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Style="{StaticResource ComboBoxToggleButton}"/>
+                <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" Content="{TemplateBinding SelectionBoxItem}" ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" IsHitTestVisible="false" Margin="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="HasDropShadow" SourceName="PART_Popup" Value="true">
+                    <Setter Property="Margin" TargetName="shadow" Value="0,0,5,5"/>
+                    <Setter Property="Color" TargetName="shadow" Value="#71000000"/>
+                </Trigger>
+                <Trigger Property="HasItems" Value="false">
+                    <Setter Property="Height" TargetName="dropDownBorder" Value="95"/>
+                </Trigger>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsGrouping" Value="true"/>
+                        <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+                </MultiTrigger>
+                <Trigger Property="ScrollViewer.CanContentScroll" SourceName="DropDownScrollViewer" Value="false">
+                    <Setter Property="Canvas.Top" TargetName="opaqueRect" Value="{Binding VerticalOffset, ElementName=DropDownScrollViewer}"/>
+                    <Setter Property="Canvas.Left" TargetName="opaqueRect" Value="{Binding HorizontalOffset, ElementName=DropDownScrollViewer}"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <SolidColorBrush x:Key="TextBox.Static.Background" Color="#FFFFFFFF"/>
+        <Style x:Key="ComboBoxEditableTextBox" TargetType="{x:Type TextBox}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="AllowDrop" Value="true"/>
+            <Setter Property="MinWidth" Value="0"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <ScrollViewer x:Name="PART_ContentHost" Background="Transparent" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <ControlTemplate x:Key="ComboBoxEditableTemplate" TargetType="{x:Type ComboBox}">
+            <Grid x:Name="templateRoot" SnapsToDevicePixels="true">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" Width="0"/>
+                </Grid.ColumnDefinitions>
+                <Popup x:Name="PART_Popup" AllowsTransparency="true" Grid.ColumnSpan="2" IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}" Placement="Bottom">
+                    <Themes:SystemDropShadowChrome x:Name="shadow" Color="Transparent" MaxHeight="{TemplateBinding MaxDropDownHeight}" MinWidth="{Binding ActualWidth, ElementName=templateRoot}">
+                        <Border x:Name="dropDownBorder" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" BorderThickness="1" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+                            <ScrollViewer x:Name="DropDownScrollViewer">
+                                <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
+                                    <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
+                                        <Rectangle x:Name="opaqueRect" Fill="{Binding Background, ElementName=dropDownBorder}" Height="{Binding ActualHeight, ElementName=dropDownBorder}" Width="{Binding ActualWidth, ElementName=dropDownBorder}"/>
+                                    </Canvas>
+                                    <ItemsPresenter x:Name="ItemsPresenter" KeyboardNavigation.DirectionalNavigation="Contained" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                </Grid>
+                            </ScrollViewer>
+                        </Border>
+                    </Themes:SystemDropShadowChrome>
+                </Popup>
+                <ToggleButton x:Name="toggleButton" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.ColumnSpan="2" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Style="{StaticResource ComboBoxToggleButton}"/>
+                <Border x:Name="border" Background="{StaticResource TextBox.Static.Background}" Margin="{TemplateBinding BorderThickness}">
+                    <TextBox x:Name="PART_EditableTextBox" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" IsReadOnly="{Binding IsReadOnly, RelativeSource={RelativeSource TemplatedParent}}" Margin="{TemplateBinding Padding}" Style="{StaticResource ComboBoxEditableTextBox}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                </Border>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsEnabled" Value="false">
+                    <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+                </Trigger>
+                <Trigger Property="IsKeyboardFocusWithin" Value="true">
+                    <Setter Property="Foreground" Value="Black"/>
+                </Trigger>
+                <Trigger Property="HasDropShadow" SourceName="PART_Popup" Value="true">
+                    <Setter Property="Margin" TargetName="shadow" Value="0,0,5,5"/>
+                    <Setter Property="Color" TargetName="shadow" Value="#71000000"/>
+                </Trigger>
+                <Trigger Property="HasItems" Value="false">
+                    <Setter Property="Height" TargetName="dropDownBorder" Value="95"/>
+                </Trigger>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsGrouping" Value="true"/>
+                        <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+                </MultiTrigger>
+                <Trigger Property="ScrollViewer.CanContentScroll" SourceName="DropDownScrollViewer" Value="false">
+                    <Setter Property="Canvas.Top" TargetName="opaqueRect" Value="{Binding VerticalOffset, ElementName=DropDownScrollViewer}"/>
+                    <Setter Property="Canvas.Left" TargetName="opaqueRect" Value="{Binding HorizontalOffset, ElementName=DropDownScrollViewer}"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <Style x:Key="KeyboardSelectionDropdown" TargetType="{x:Type ComboBox}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource ComboBox.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource ComboBox.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="Padding" Value="6,3,5,3"/>
+            <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="Template" Value="{StaticResource ComboBoxTemplate}"/>
+            <Style.Triggers>
+                <Trigger Property="IsEditable" Value="true">
+                    <Setter Property="IsTabStop" Value="false"/>
+                    <Setter Property="Padding" Value="2"/>
+                    <Setter Property="Template" Value="{StaticResource ComboBoxEditableTemplate}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Border BorderThickness="1" Margin="0,2,0,0">
+        <TabControl Margin="0,-1,0,0">
+            <TabItem x:Name="Home" Header="Home">
+                <Grid Background="#FFE5E5E5">
+                    <TextBlock HorizontalAlignment="Left" Margin="127,55,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="359" Width="590"><Run Text="Welcome!"/><LineBreak/><Run/><LineBreak/><Run Text="too lazy to google lorem ipsum"/></TextBlock>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Options">
+                <Grid x:Name="Options" Background="#FFE5E5E5">
+                    <RadioButton x:Name="Options_TEST" Content="RadioButton" HorizontalAlignment="Left" Margin="66,46,0,0" VerticalAlignment="Top"/>
+                    <ComboBox HorizontalAlignment="Left" Margin="325,71,0,0" VerticalAlignment="Top" Width="261" Style="{DynamicResource KeyboardSelectionDropdown}" Height="34"/>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="Keyboard" Header="Keyboard" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="101" Margin="-2,-2,-45,0" Initialized="LoadKeyboardInfo">
+                <Grid Background="#FFE5E5E5" Margin="0,0,-2,0">
+                    <ComboBox x:Name="DeviceSelection" HorizontalAlignment="Left" Margin="74,11,0,0" VerticalAlignment="Top" Width="190" Style="{DynamicResource KeyboardSelectionDropdown}" SelectionChanged="OnKeyboardChange">
+                        <ComboBoxItem x:Name="Ornata" Content="Ornata" HorizontalAlignment="Left" Width="188"/>
+                        <ComboBoxItem x:Name="Deathstalker" Content="Deathstalker" HorizontalAlignment="Left" Width="188"/>
+                        <ComboBoxItem x:Name="Blackwidow" Content="Blackwidow" HorizontalAlignment="Left" Width="188"/>
+                        <ComboBoxItem x:Name="Blackwidow_X" Content="Blackwidow X" HorizontalAlignment="Left" Width="188"/>
+                        <ComboBoxItem x:Name="Blackwidow_Tournament" Content="Blackwidow Tournament" HorizontalAlignment="Left" Width="188"/>
+                        <ComboBoxItem x:Name="Blackwidow_X_Tournament" Content="Blackwidow X Tournament" HorizontalAlignment="Left" Width="188"/>
+                        <ComboBoxItem x:Name="Blackwidow_DeusEx" Content="Blackwidow Deus Ex" HorizontalAlignment="Left" Width="188"/>
+                        <ComboBoxItem x:Name="Blackwidow_Overwatch" Content="Blackwidow Overwatch" HorizontalAlignment="Left" Width="188"/>
+                        <ComboBoxItem x:Name="Blackwidow_CoD" Content="Blackwidow Call of Duty" HorizontalAlignment="Left" Width="188"/>
+                    </ComboBox>
+                    <Label x:Name="SelectKeyboard_Text" Content="Keyboard" HorizontalAlignment="Left" Margin="10,7,0,0" VerticalAlignment="Top" Width="64"/>
+                    <Button x:Name="M1" Content="M1" HorizontalAlignment="Left" Margin="27,153,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="M2" Content="M2" HorizontalAlignment="Left" Margin="27,185,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="M3" Content="M3" HorizontalAlignment="Left" Margin="27,217,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="M4" Content="M4" HorizontalAlignment="Left" Margin="27,249,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="M5" Content="M5" HorizontalAlignment="Left" Margin="27,281,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Grave" Content="`" HorizontalAlignment="Left" Margin="63,153,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="NumRow1" Content="1" HorizontalAlignment="Left" Margin="95,153,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="NumRow2" Content="2" HorizontalAlignment="Left" Margin="127,153,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="NumRow3" Content="3" HorizontalAlignment="Left" Margin="159,153,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="NumRow4" Content="4" HorizontalAlignment="Left" Margin="191,153,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="NumRow5" Content="5" HorizontalAlignment="Left" Margin="223,153,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="NumRow6" Content="6" HorizontalAlignment="Left" Margin="255,153,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="NumRow7" Content="7" HorizontalAlignment="Left" Margin="287,153,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="NumRow8" Content="8" HorizontalAlignment="Left" Margin="319,153,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="NumRow9" Content="9" HorizontalAlignment="Left" Margin="351,153,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="NumRow0" Content="0" HorizontalAlignment="Left" Margin="383,153,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="NumRowMinus" Content="-" HorizontalAlignment="Left" Margin="415,153,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="NumRowEquals" Content="=" HorizontalAlignment="Left" Margin="447,153,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Backspace" Content="Backspace" HorizontalAlignment="Left" Margin="479,153,0,0" VerticalAlignment="Top" Width="59" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Insert" Content="Ins" HorizontalAlignment="Left" Margin="547,153,0,0" VerticalAlignment="Top" Width="27" Height="27" FontSize="8" Click="OpenColorPicker"/>
+                    <Button x:Name="HomeButton" Content="Home" HorizontalAlignment="Left" Margin="579,153,0,0" VerticalAlignment="Top" Width="27" Height="27" FontSize="8" Click="OpenColorPicker"/>
+                    <Button x:Name="PageUp" Content="Page&#xD;&#xA; Up" HorizontalAlignment="Left" Margin="611,153,0,0" VerticalAlignment="Top" Width="27" Height="27" FontSize="8" Click="OpenColorPicker"/>
+                    <Button x:Name="NumLock" Content="Num&#xD;&#xA; Lk" HorizontalAlignment="Left" Margin="647,153,0,0" VerticalAlignment="Top" Width="27" Height="27" FontSize="8" Click="OpenColorPicker"/>
+                    <Button x:Name="NumDivide" Content="/" HorizontalAlignment="Left" Margin="679,153,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="NumMultiply" Content="*" HorizontalAlignment="Left" Margin="711,153,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="NumMinus" Content="-" HorizontalAlignment="Left" Margin="743,153,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Escape" Content="Esc" Margin="63,117,0,0" VerticalAlignment="Top" Height="27" Click="OpenColorPicker" HorizontalAlignment="Left" Width="27"/>
+                    <Button x:Name="F1" Content="F1" HorizontalAlignment="Left" Margin="147,117,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="F2" Content="F2" HorizontalAlignment="Left" Margin="179,117,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="F3" Content="F3" HorizontalAlignment="Left" Margin="211,117,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="F4" Content="F4" HorizontalAlignment="Left" Margin="243,117,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="F5" Content="F5" HorizontalAlignment="Left" Margin="281,117,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="F6" Content="F6" HorizontalAlignment="Left" Margin="313,117,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="F7" Content="F7" HorizontalAlignment="Left" Margin="345,117,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="F8" Content="F8" HorizontalAlignment="Left" Margin="377,117,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="F9" Content="F9" HorizontalAlignment="Left" Margin="415,117,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="F10" Content="F10" HorizontalAlignment="Left" Margin="447,117,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="F11" Content="F11" HorizontalAlignment="Left" Margin="479,117,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="F12" Content="F12" HorizontalAlignment="Left" Margin="511,117,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="PrintScreen" Content="prt sc" HorizontalAlignment="Left" Margin="547,117,0,0" VerticalAlignment="Top" Width="27" Height="27" FontSize="8" Click="OpenColorPicker"/>
+                    <Button x:Name="ScrollLock" Content="scr&#xA;lk" HorizontalAlignment="Left" Margin="579,117,0,0" VerticalAlignment="Top" Width="27" Height="27" FontSize="8" Click="OpenColorPicker"/>
+                    <Button x:Name="Break" Content="pause" HorizontalAlignment="Left" Margin="611,117,0,0" VerticalAlignment="Top" Width="27" Height="27" FontSize="8" Click="OpenColorPicker"/>
+                    <Button x:Name="NumPlus" Content="+" HorizontalAlignment="Left" Margin="743,185,0,0" VerticalAlignment="Top" Width="27" Height="59" Click="OpenColorPicker"/>
+                    <Button x:Name="NumEnter" Content="Enter" HorizontalAlignment="Left" Margin="743,249,0,0" VerticalAlignment="Top" Width="27" Height="59" FontSize="8" Click="OpenColorPicker"/>
+                    <Button x:Name="Num7" Content="7" HorizontalAlignment="Left" Margin="647,185,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Num8" Content="8" HorizontalAlignment="Left" Margin="679,185,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Num9" Content="9" HorizontalAlignment="Left" Margin="711,185,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Num4" Content="4" HorizontalAlignment="Left" Margin="647,217,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Num5" Content="5" HorizontalAlignment="Left" Margin="679,217,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Num6" Content="6" HorizontalAlignment="Left" Margin="711,217,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Num0" Content="0" HorizontalAlignment="Left" Margin="647,281,0,0" VerticalAlignment="Top" Width="59" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Num1" Content="1" HorizontalAlignment="Left" Margin="647,249,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Num2" Content="2" HorizontalAlignment="Left" Margin="679,249,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Num3" Content="3" HorizontalAlignment="Left" Margin="711,249,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="NumPeriod" Content="." HorizontalAlignment="Left" Margin="711,281,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Up" Content="^" HorizontalAlignment="Left" Margin="579,249,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Left" Content="," HorizontalAlignment="Left" Margin="547,281,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Down" Content="v" HorizontalAlignment="Left" Margin="579,281,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Right" Content=">" HorizontalAlignment="Left" Margin="611,281,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Q" Content="Q" HorizontalAlignment="Left" Margin="107,185,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="W" Content="W" HorizontalAlignment="Left" Margin="139,185,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="E" Content="E" HorizontalAlignment="Left" Margin="171,185,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="R" Content="R" HorizontalAlignment="Left" Margin="203,185,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="T" Content="T" HorizontalAlignment="Left" Margin="235,185,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Y" Content="Y" HorizontalAlignment="Left" Margin="267,185,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="U" Content="U" HorizontalAlignment="Left" Margin="299,185,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="I" Content="I" HorizontalAlignment="Left" Margin="331,185,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="O" Content="O" HorizontalAlignment="Left" Margin="363,185,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="P" Content="P" HorizontalAlignment="Left" Margin="395,185,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="OpenCurly" Content=" {" HorizontalAlignment="Left" Margin="427,185,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="CloseCurly" Content="}" HorizontalAlignment="Left" Margin="459,185,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="A" Content="A" HorizontalAlignment="Left" Margin="116,217,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="S" Content="S" HorizontalAlignment="Left" Margin="148,217,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="D" Content="D" HorizontalAlignment="Left" Margin="180,217,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="F" Content="F" HorizontalAlignment="Left" Margin="212,217,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="G" Content="G" HorizontalAlignment="Left" Margin="244,217,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="H" Content="H" HorizontalAlignment="Left" Margin="276,217,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="J" Content="J" HorizontalAlignment="Left" Margin="308,217,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="K" Content="K" HorizontalAlignment="Left" Margin="340,217,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="L" Content="L" HorizontalAlignment="Left" Margin="372,217,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Semicolon" Content=" ;" HorizontalAlignment="Left" Margin="404,217,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Apostraphe" Content="'" HorizontalAlignment="Left" Margin="436,217,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Z" Content="Z" HorizontalAlignment="Left" Margin="130,249,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="X" Content="X" HorizontalAlignment="Left" Margin="162,249,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="C" Content="C" HorizontalAlignment="Left" Margin="194,249,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="V" Content="V" HorizontalAlignment="Left" Margin="226,249,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="B" Content="B" HorizontalAlignment="Left" Margin="258,249,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="N" Content="N" HorizontalAlignment="Left" Margin="290,249,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="M" Content="M" HorizontalAlignment="Left" Margin="322,249,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Comma" Content="," HorizontalAlignment="Left" Margin="354,249,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Period" Content="." HorizontalAlignment="Left" Margin="386,249,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Slash" Content="/" HorizontalAlignment="Left" Margin="418,249,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Tab" Content="tab" HorizontalAlignment="Left" Margin="63,185,0,0" VerticalAlignment="Top" Width="39" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Caps" Content="caps" HorizontalAlignment="Left" Margin="63,217,0,0" VerticalAlignment="Top" Width="48" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="LShift" Content="shift" HorizontalAlignment="Left" Margin="63,249,0,0" VerticalAlignment="Top" Width="62" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Backslash" Content="\" HorizontalAlignment="Left" Margin="491,185,0,0" VerticalAlignment="Top" Width="47" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Enter" Content="enter" HorizontalAlignment="Left" Margin="468,217,0,0" VerticalAlignment="Top" Width="70" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="RShift" Content="shift" HorizontalAlignment="Left" Margin="450,249,0,0" VerticalAlignment="Top" Width="88" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Lcrtl" Content="ctrl" HorizontalAlignment="Left" Margin="63,281,0,0" VerticalAlignment="Top" Width="39" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Windows" Content="Win" HorizontalAlignment="Left" Margin="107,281,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Lalt" Content="alt" HorizontalAlignment="Left" Margin="139,281,0,0" VerticalAlignment="Top" Width="39" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Rcrtl" Content="ctrl" HorizontalAlignment="Left" Margin="491,281,0,0" VerticalAlignment="Top" Width="47" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Rightclick" Content="Opt" HorizontalAlignment="Left" Margin="459,281,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Function" Content="fn" HorizontalAlignment="Left" Margin="427,281,0,0" VerticalAlignment="Top" Width="27" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Ralt" Content="alt" HorizontalAlignment="Left" Margin="383,281,0,0" VerticalAlignment="Top" Width="39" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Space" Content="" HorizontalAlignment="Left" Margin="183,281,0,0" VerticalAlignment="Top" Width="195" Height="27" Click="OpenColorPicker"/>
+                    <Button x:Name="Razer_Logo" Content="Razer Logo" HorizontalAlignment="Left" Margin="351,333,0,0" VerticalAlignment="Top" Width="71" Height="49" Click="OpenColorPicker"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Border>
+</Window>
